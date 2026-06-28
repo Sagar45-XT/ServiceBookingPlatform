@@ -134,6 +134,7 @@ const updateBookingStatus = async (req, res) => {
     const allowedStatus = [
       "Pending",
       "Confirmed",
+      "In Progress",
       "Completed",
       "Cancelled",
     ];
@@ -176,4 +177,46 @@ const updateBookingStatus = async (req, res) => {
   }
 };
 
-module.exports = {createBooking, getMyBookings, getBookingById, updateBookingStatus};
+const getAllBookings = async (req, res) => {
+  try {
+    const bookings = await Booking.find()
+      .populate("userId", "name email")
+      .populate("services.serviceId");
+
+    res.status(200).json({
+      success: true,
+      count: bookings.length,
+      bookings,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const deleteBooking = async (req, res) => {
+  try {
+    const booking = await Booking.findByIdAndDelete(req.params.id);
+
+    if (!booking) {
+      return res.status(404).json({
+        success: false,
+        message: "Booking not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Booking deleted successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+module.exports = {createBooking, getMyBookings, getBookingById, updateBookingStatus, getAllBookings, deleteBooking};

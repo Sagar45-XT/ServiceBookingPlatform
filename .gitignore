@@ -8,3 +8,18 @@ frontend/node_modules/
 .env.*
 backend/.env
 frontend/.env
+
+# Logs
+*.log
+
+# Build folders
+dist/
+build/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
